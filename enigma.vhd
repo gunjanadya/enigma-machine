@@ -37,7 +37,8 @@ entity enigma is
     ps2_clk      : IN  STD_LOGIC;                     --clock signal from PS/2 keyboard
     ps2_data     : IN  STD_LOGIC;                     --data signal from PS/2 keyboard
     sw, btn      : in  std_logic_vector(3 downto 0);
-    seg : out STD_LOGIC_VECTOR (6 downto 0)
+    seg          : out STD_LOGIC_VECTOR (6 downto 0);
+    an           : out std_logic
   );
 end enigma;
 
@@ -131,7 +132,7 @@ keyboard : ps2_keyboard
   PORT MAP(
     clk => clk,
     ps2_clk => ps2_clk,
-    ps2_data => data_in,
+    ps2_data => ps2_data,
     ps2_code => ascii_in
    ); --code received from PS/2
    
@@ -158,4 +159,6 @@ ssd : display_ctrl
        DispVal => ssd_sig,
        seg     => seg
    );
+   
+an <= '0';
 end Behavioral;
