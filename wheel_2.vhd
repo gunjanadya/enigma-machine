@@ -8,7 +8,7 @@ entity wheel_2 is
   Port ( 
     pos_in, char_in : in  std_logic_vector(4 downto 0);
     char_out        : out std_logic_vector(4 downto 0);
-    clk, en         : in std_logic
+    clk             : in  std_logic
   );
  end wheel_2;
 
@@ -19,7 +19,6 @@ signal pos : std_logic_vector(4 downto 0) := (others => '0');
 begin
 process (clk) begin
     if rising_edge(clk) then
-        if en = '1' then
             pos <= std_logic_vector( unsigned(pos_in) + unsigned(char_in));
             if unsigned(pos) > 26 then
                 pos <= std_logic_vector( unsigned(pos) mod 26);
@@ -53,7 +52,6 @@ process (clk) begin
                 when "11001" => char_out <= "00000";
                 when others  => char_out <= (others => '0');
             end case;
-        end if;
     end if;
 end process;
 
