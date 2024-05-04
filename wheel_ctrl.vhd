@@ -33,10 +33,10 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity wheel_ctrl is
   Port ( 
-      clk, data_in : in  std_logic;
-      sw, btn      : in  std_logic_vector(3 downto 0);
-      char_in      : in  std_logic_vector (4 downto 0);
-      ssd_out      : out std_logic_vector(4 downto 0)
+      clk, en, data_in : in  std_logic;
+      sw, btn          : in  std_logic_vector(3 downto 0);
+      char_in          : in  std_logic_vector (4 downto 0);
+      ssd_out          : out std_logic_vector(4 downto 0)
       
   );
 end wheel_ctrl;
@@ -70,6 +70,7 @@ port map (
 clk_proc : process (clk)
 begin
     if(rising_edge (clk)) then
+        if en = '1' then
         case sw is
             when "0001" =>
                 ssd_out <= pos0;
@@ -122,6 +123,7 @@ begin
                 
             when others => ssd_out <= (others => '0');
         end case;
+        end if;
     end if;
 end process clk_proc;
 
