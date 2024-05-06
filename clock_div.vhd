@@ -49,7 +49,7 @@ process(clk)
 begin
     if rising_edge(clk) then
     
-        if (unsigned(count) < 62499999) then
+        if (unsigned(count) < 24999999) then
             count <= std_logic_vector(unsigned(count) + 1);
             nbl <= '0';            
         else

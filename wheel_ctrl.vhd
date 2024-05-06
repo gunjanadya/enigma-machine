@@ -96,7 +96,7 @@ begin
                     end if;
                 end if;
             when "010" => 
-                ssd_out <= pos2;
+                ssd_out <= pos1;
                 if btn(0) = '1' then 
                     if unsigned(pos1) > 0 then
                         pos1 <= std_logic_vector(unsigned(pos1) - 1);
@@ -126,8 +126,10 @@ begin
                     end if;
                 end if;
             when "111" =>
-                ssd_out <= char_out;
+            
+                ssd_out <= char_out; 
                 
+                               
                 -- on every letter input, rotate the wheels
                 if data_in = '1' then
                     if unsigned(pos0) < 26 then

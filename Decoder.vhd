@@ -18,7 +18,7 @@ architecture Behavioral of Decoder is
 
    signal sclk                  : STD_LOGIC_VECTOR(19 downto 0);
    signal decode_reg            : std_logic_vector(3 downto 0);
-   signal is_a_key_pressed_reg  : std_logic;
+   signal is_a_key_pressed_reg  : std_logic := '0';
    
 begin
 
@@ -102,7 +102,7 @@ begin
                    decode_reg <= "1010"; --9
                    is_a_key_pressed_reg <= '1';
                    --R4
-               elsif Row = "1110" then
+               elsif Row = "1110" then 
                    decode_reg <= "1110"; --E
                    is_a_key_pressed_reg <= '1';
                else

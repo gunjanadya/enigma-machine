@@ -33,13 +33,10 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity enigma is
   Port ( 
-    clk          : in    std_logic;                     --system clock
---    ps2_clk      : in  std_logic;                     --clock signal from PS/2 keyboard
---    ps2_data     : in  std_logic;                     --data signal from PS/2 keyboard
+    clk          : in    std_logic;                     
     sw, btn      : in    std_logic_vector (3 downto 0);
     seg          : out   std_logic_vector (6 downto 0);
     an           : out   std_logic;
-    
     kypd         : inout std_logic_vector (7 downto 0)
 
     );
@@ -48,15 +45,9 @@ end enigma;
 
 architecture Behavioral of enigma is
 
---signal debounce_counter_size    : INTEGER                      := 9;
---signal clk_freq                 : INTEGER                      := 125_000_000;
---signal ascii_in                 : std_logic_vector(7 downto 0) := (others => '0');
-
 signal kpad                     : std_logic_vector(3 downto 0) := (others => '0');
-
 signal en_sig                   : std_logic                    := '0';
 signal data_in                  : std_logic                    := '0';
-
 signal btn_sig                  : std_logic_vector(3 downto 0) := (others => '0');
 signal char_in                  : std_logic_vector(4 downto 0) := (others => '0');
 signal ssd_sig                  : std_logic_vector(4 downto 0) := (others => '0');
@@ -68,28 +59,6 @@ component debouncer is
       dbnc : out std_logic := '0'
     );
 end component;
-
---component ps2_keyboard is
---  GENERIC(
---    clk_freq              : INTEGER := 50_000_000;   --system clock frequency in Hz
---    debounce_counter_size : INTEGER := 8             --set such that (2^size)/clk_freq = 5us (size = 8 for 50MHz)
---  );        
---  PORT(
---    clk          : in  std_logic;                     --system clock
---    ps2_clk      : in  std_logic;                     --clock signal from PS/2 keyboard
---    ps2_data     : in  std_logic;                     --data signal from PS/2 keyboard
---    ps2_code_new : out std_logic;                     --flag that new PS/2 code is available on ps2_code bus
---    ps2_code     : out std_logic_vector(7 DOWNTO 0)   --code received from PS/2
---   );
---end component;
-
---component ascii2num is
---  Port ( 
---      clk   : in std_logic;
---      ascii : in  std_logic_vector(7 downto 0);
---      num   : out std_logic_vector(4 downto 0)
---  );
---end component;
 
 component Decoder is
    port (
@@ -123,10 +92,8 @@ end component;
 
 component display_ctrl is
    port (
-       --output from the Decoder
-       DispVal : in STD_LOGIC_VECTOR (4 downto 0);
-       --controls which digit to display
-       seg : out STD_LOGIC_VECTOR (6 downto 0)
+       DispVal  : in  STD_LOGIC_VECTOR (4 downto 0);
+       seg      : out STD_LOGIC_VECTOR (6 downto 0)
    );
 end component;
 
@@ -165,26 +132,6 @@ Port Map(
     clk => clk,
     div => en_sig
 ); 
-   
---keyboard : ps2_keyboard
---  GENERIC MAP(
---    clk_freq => clk_freq, --system clock frequency in Hz
---    debounce_counter_size => debounce_counter_size --set such that (2^size)/clk_freq = 5us (size = 8 for 50MHz)
---  )
---  PORT MAP(
---    clk => clk,
---    ps2_clk => ps2_clk,
---    ps2_data => ps2_data,
---    ps2_code => ascii_in
---   ); --code received from PS/2
-
---input_converter : ascii2num 
---  Port Map ( 
---      clk,
---      ascii => ascii_in,
---      num   => char_in
---  );
-
 
 keypad : Decoder 
    port map (
@@ -203,7 +150,6 @@ Port Map (
     kpad => kpad,
     char => char_in
 );
-
 
 encryption : wheel_ctrl
   Port Map( 
