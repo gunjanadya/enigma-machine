@@ -70,34 +70,60 @@ port map (
 clk_proc : process (clk)
 begin
     if(rising_edge (clk)) then
+        -- reset
+        if btn(2) = '1' then
+            pos0        <= (others => '0');
+            pos1        <= (others => '0');
+            pos2        <= (others => '0');
+            char_out    <= (others => '0');
+        end if;
+        
         if en = '1' then
         case sw is
             when "001" =>
                 ssd_out <= pos0;
                 if btn(0) = '1' then 
-                    pos0 <= std_logic_vector(unsigned(pos0) - 1);
+                    if unsigned(pos0) <= 0 then
+                        pos0 <= std_logic_vector(unsigned(pos0) - 1);
+                    else
+                        pos0 <= "11001";
+                    end if;
                 elsif btn(1) = '1' then
-                    pos0 <= std_logic_vector(unsigned(pos0) + 1);
-                elsif btn(2) = '1' then
-                    pos0 <= (others => '0');
+                    if unsigned(pos0) >= 25 then
+                        pos0 <= std_logic_vector(unsigned(pos0) - 1);
+                    else
+                        pos0 <= (others => '0');
+                    end if;
                 end if;
             when "010" => 
                 ssd_out <= pos2;
                 if btn(0) = '1' then 
-                    pos2 <= std_logic_vector(unsigned(pos0) - 1);
-                elsif btn(1) = '1' then 
-                    pos1 <= std_logic_vector(unsigned(pos0) + 1);
-                elsif btn(2) = '1' then
-                    pos2 <= (others => '0');
+                    if unsigned(pos1) <= 0 then
+                        pos1 <= std_logic_vector(unsigned(pos1) - 1);
+                    else
+                        pos1 <= "11001";
+                    end if;
+                elsif btn(1) = '1' then
+                    if unsigned(pos1) >= 25 then
+                        pos1 <= std_logic_vector(unsigned(pos1) - 1);
+                    else
+                        pos1 <= (others => '0');
+                    end if;
                 end if;
             when "100" => 
                 ssd_out <= pos2;
                 if btn(0) = '1' then 
-                    pos2 <= std_logic_vector(unsigned(pos0) - 1);
+                    if unsigned(pos2) <= 0 then
+                        pos2 <= std_logic_vector(unsigned(pos2) - 1);
+                    else
+                        pos0 <= "11001";
+                    end if;
                 elsif btn(1) = '1' then
-                    pos2 <= std_logic_vector(unsigned(pos0) + 1);
-                elsif btn(2) = '1' then
-                    pos2 <= (others => '0');
+                    if unsigned(pos2) >= 25 then
+                        pos2 <= std_logic_vector(unsigned(pos2) - 1);
+                    else
+                        pos2 <= (others => '0');
+                    end if;
                 end if;
             when "111" =>
                 ssd_out <= char_out;
