@@ -11,7 +11,7 @@ end wheel_top;
 
 architecture Behavioral of wheel_top is
 
-signal char_1, char_2, char_3, char_4, char_5 : std_logic_vector(4 downto 0) := (others => '0');
+signal char_1, char_2, char_3, char_4, char_5 : std_logic_vector(4 downto 0) := (others => '1');
 
 component wheel_0
     port (
