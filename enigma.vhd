@@ -33,20 +33,26 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity enigma is
   Port ( 
-    clk          : in  std_logic;                     --system clock
-    ps2_clk      : in  std_logic;                     --clock signal from PS/2 keyboard
-    ps2_data     : in  std_logic;                     --data signal from PS/2 keyboard
-    sw, btn      : in  std_logic_vector(3 downto 0);
-    seg          : out std_logic_vector(6 downto 0);
-    an           : out std_logic
-  );
+    clk          : in    std_logic;                     --system clock
+--    ps2_clk      : in  std_logic;                     --clock signal from PS/2 keyboard
+--    ps2_data     : in  std_logic;                     --data signal from PS/2 keyboard
+    sw, btn      : in    std_logic_vector (3 downto 0);
+    seg          : out   std_logic_vector (6 downto 0);
+    an           : out   std_logic;
+    
+    kypd         : inout std_logic_vector (7 downto 0)
+
+    );
+
 end enigma;
 
 architecture Behavioral of enigma is
 
-signal debounce_counter_size    : INTEGER                      := 9;
-signal clk_freq                 : INTEGER                      := 125_000_000;
-signal ascii_in                 : std_logic_vector(7 downto 0) := (others => '0');
+--signal debounce_counter_size    : INTEGER                      := 9;
+--signal clk_freq                 : INTEGER                      := 125_000_000;
+--signal ascii_in                 : std_logic_vector(7 downto 0) := (others => '0');
+
+signal kpad                     : std_logic_vector(3 downto 0) := (others => '0');
 
 signal en_sig                   : std_logic                    := '0';
 signal data_in                  : std_logic                    := '0';
@@ -77,18 +83,38 @@ end component;
 --   );
 --end component;
 
-component ascii2num is
-  Port ( 
-      clk   : in std_logic;
-      ascii : in  std_logic_vector(7 downto 0);
-      num   : out std_logic_vector(4 downto 0)
-  );
+--component ascii2num is
+--  Port ( 
+--      clk   : in std_logic;
+--      ascii : in  std_logic_vector(7 downto 0);
+--      num   : out std_logic_vector(4 downto 0)
+--  );
+--end component;
+
+component Decoder is
+   port (
+       clk              : in  STD_LOGIC;
+       rst              : in  std_logic;
+       Row              : in  STD_LOGIC_VECTOR (3 downto 0);
+       Col              : out STD_LOGIC_VECTOR (3 downto 0);
+       DecodeOut        : out STD_LOGIC_VECTOR (3 downto 0);
+       is_a_key_pressed : out std_logic
+       );
+end component;
+
+component kpd2char is
+Port ( 
+    clk  : in std_logic;
+    sw   : in  std_logic;
+    kpad : in  std_logic_vector (3 downto 0);
+    char : out std_logic_vector (4 downto 0)
+);
 end component;
 
 component wheel_ctrl is
   Port ( 
       clk, en, data_in : in  std_logic;
-      sw, btn          : in  std_logic_vector(3 downto 0);
+      sw, btn          : in  std_logic_vector(2 downto 0);
       char_in          : in  std_logic_vector (4 downto 0);
       ssd_out          : out std_logic_vector(4 downto 0)
       
@@ -151,21 +177,41 @@ Port Map(
 --    ps2_data => ps2_data,
 --    ps2_code => ascii_in
 --   ); --code received from PS/2
-   
-input_converter : ascii2num 
-  Port Map ( 
-      clk,
-      ascii => ascii_in,
-      num   => char_in
-  );
+
+--input_converter : ascii2num 
+--  Port Map ( 
+--      clk,
+--      ascii => ascii_in,
+--      num   => char_in
+--  );
+
+
+keypad : Decoder 
+   port map (
+       clk => clk,
+       rst => btn(3),
+       Row => kypd(3 downto 0), 
+       Col => kypd(7 downto 4) , 
+       DecodeOut => kpad,
+       is_a_key_pressed => data_in
+   );
+
+input_converter : kpd2char
+Port Map ( 
+    clk  => clk ,
+    sw   => sw(3),
+    kpad => kpad,
+    char => char_in
+);
+
 
 encryption : wheel_ctrl
   Port Map( 
       clk     => clk, 
       en      => en_sig,
       data_in => data_in,
-      sw      => sw, 
-      btn     => btn_sig,
+      sw      => sw(2 downto 0), 
+      btn     => btn_sig(2 downto 0),
       char_in => char_in,
       ssd_out => ssd_sig
       

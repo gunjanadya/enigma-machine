@@ -33,9 +33,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity kpd2char is
 Port ( 
+    clk  : in std_logic;
     sw   : in  std_logic;
-    btn  : in  std_logic_vector(3 downto 0);
-    char : out std_logic_vector(4 downto 0)
+    kpad : in  std_logic_vector (3 downto 0);
+    char : out std_logic_vector (4 downto 0)
 );
 end kpd2char;
 
@@ -43,10 +44,14 @@ architecture Behavioral of kpd2char is
 
 begin
 
-if sw = '0' then
-    char <= '0' + btn;
-else
-    char <= '1' + btn;
-end if;
+process(clk) begin
+    if rising_edge(clk) then
+        if sw = '0' then
+            char <= '0' & kpad;
+        else
+            char <= '1' & kpad;
+        end if;
+    end if;
+end process;
 
 end Behavioral;

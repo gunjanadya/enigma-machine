@@ -6,13 +6,13 @@ use IEEE.NUMERIC_STD.all;
 
 entity ssd_keypad_top is
    port (
-       sys_clk : in STD_LOGIC;
-       decode_out : in STD_LOGIC_VECTOR(3 downto 0);
-       an : out STD_LOGIC; -- Controls which position of the seven segment display to display
-       seg : out STD_LOGIC_VECTOR (6 downto 0); --controls segments of pmod to display
-       sw : in STD_LOGIC_VECTOR(3 downto 0); -- switches on board
-       led : out STD_LOGIC_VECTOR(3 downto 0);
-       kypd : inout std_logic_vector(7 downto 0)
+       sys_clk      : in    STD_LOGIC;
+       decode_out   : in    STD_LOGIC_VECTOR (3 downto 0);
+       an           : out   STD_LOGIC;                      -- Controls which position of the seven segment display to display
+       seg          : out   STD_LOGIC_VECTOR (6 downto 0);  -- controls segments of pmod to display
+       sw           : in    STD_LOGIC_VECTOR (3 downto 0);   -- switches on board
+       led          : out   STD_LOGIC_VECTOR (3 downto 0);
+       kypd         : inout std_logic_vector (7 downto 0)
    );
 end ssd_keypad_top;
 
@@ -101,7 +101,16 @@ begin
    pd3  : single_pulse_detector port map(clk => clk, rst => rst, input_signal => keypad_debounce(3), output_pulse => keypad_pulse(3));
    ssd1 : DisplayController port map(DispVal => dcd_reg1, segOut => seg1);
    ssd2 : DisplayController port map(DispVal => dcd_reg2, segOut => seg2);
-   dcd1 : Decoder port map (clk => clk, rst => rst, Row => kypd(3 downto 0), Col => kypd(7 downto 4) , DecodeOut => dcd_reg, is_a_key_pressed => is_a_key_pressed);
+   
+   dcd1 : Decoder 
+   port map (
+       clk => clk, 
+       rst => rst, 
+       Row => kypd(3 downto 0), 
+       Col => kypd(7 downto 4) , 
+       DecodeOut => dcd_reg, 
+       is_a_key_pressed => is_a_key_pressed
+   );
    
 
 process (rst, keypad_pulse)

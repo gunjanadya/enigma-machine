@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity wheel_ctrl is
   Port ( 
       clk, en, data_in : in  std_logic;
-      sw, btn          : in  std_logic_vector(3 downto 0);
+      sw, btn          : in  std_logic_vector(2 downto 0);
       char_in          : in  std_logic_vector (4 downto 0);
       ssd_out          : out std_logic_vector(4 downto 0)
       
@@ -72,7 +72,7 @@ begin
     if(rising_edge (clk)) then
         if en = '1' then
         case sw is
-            when "0001" =>
+            when "001" =>
                 ssd_out <= pos0;
                 if btn(0) = '1' then 
                     pos0 <= std_logic_vector(unsigned(pos0) - 1);
@@ -81,7 +81,7 @@ begin
                 elsif btn(2) = '1' then
                     pos0 <= (others => '0');
                 end if;
-            when "0010" => 
+            when "010" => 
                 ssd_out <= pos2;
                 if btn(0) = '1' then 
                     pos2 <= std_logic_vector(unsigned(pos0) - 1);
@@ -90,7 +90,7 @@ begin
                 elsif btn(2) = '1' then
                     pos2 <= (others => '0');
                 end if;
-            when "0100" => 
+            when "100" => 
                 ssd_out <= pos2;
                 if btn(0) = '1' then 
                     pos2 <= std_logic_vector(unsigned(pos0) - 1);
@@ -99,7 +99,7 @@ begin
                 elsif btn(2) = '1' then
                     pos2 <= (others => '0');
                 end if;
-            when "1000" =>
+            when "111" =>
                 ssd_out <= char_out;
                 
                 -- on every letter input, rotate the wheels
@@ -121,7 +121,7 @@ begin
                     end if;            
                 end if;
                 
-            when others => ssd_out <= (others => '0');
+            when others => ssd_out <= "11111";
         end case;
         end if;
     end if;
