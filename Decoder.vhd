@@ -5,20 +5,21 @@ use IEEE.STD_LOGIC_UNSIGNED.all;
 
 entity Decoder is
    port (
-       clk : in STD_LOGIC;
-       rst: in std_logic;
-       Row : in STD_LOGIC_VECTOR (3 downto 0);
-       Col : out STD_LOGIC_VECTOR (3 downto 0);
-       DecodeOut : out STD_LOGIC_VECTOR (3 downto 0);
-       is_a_key_pressed: out std_logic
+       clk              : in  STD_LOGIC;
+       rst              : in  std_logic;
+       Row              : in  STD_LOGIC_VECTOR (3 downto 0);
+       Col              : out STD_LOGIC_VECTOR (3 downto 0);
+       DecodeOut        : out STD_LOGIC_VECTOR (3 downto 0);
+       is_a_key_pressed : out std_logic
        );
 end Decoder;
 
 architecture Behavioral of Decoder is
 
-   signal sclk : STD_LOGIC_VECTOR(19 downto 0);
-   signal decode_reg: std_logic_vector(3 downto 0);
-   signal is_a_key_pressed_reg: std_logic;
+   signal sclk                  : STD_LOGIC_VECTOR(19 downto 0);
+   signal decode_reg            : std_logic_vector(3 downto 0);
+   signal is_a_key_pressed_reg  : std_logic;
+   
 begin
 
    process (clk, rst)
@@ -36,7 +37,7 @@ begin
            elsif sclk = "00011000011010101000" then
                    --R1
                if Row = "0111" then
-                   decode_reg <= "0001"; --1
+                   decode_reg <= "0000"; --1
                    is_a_key_pressed_reg <= '1';
                    --R2
                elsif Row = "1011" then
@@ -44,11 +45,11 @@ begin
                    is_a_key_pressed_reg <= '1';
                    --R3
                elsif Row = "1101" then
-                   decode_reg <= "0111"; --7
+                   decode_reg <= "1000"; --7
                    is_a_key_pressed_reg <= '1';
                    --R4
                elsif Row = "1110" then
-                   decode_reg <= "0000"; --0
+                   decode_reg <= "1100"; --0
                    is_a_key_pressed_reg <= '1';
                else
                    decode_reg <= decode_reg;
@@ -63,7 +64,7 @@ begin
            elsif sclk = "00110000110101001000" then
                --R1
                if Row = "0111" then
-                   decode_reg <= "0010"; --2
+                   decode_reg <= "0001"; --2
                    is_a_key_pressed_reg <= '1';
                    --R2
                elsif Row = "1011" then
@@ -71,11 +72,11 @@ begin
                    is_a_key_pressed_reg <= '1';
                    --R3
                elsif Row = "1101" then
-                   decode_reg <= "1000"; --8
+                   decode_reg <= "1001"; --8
                    is_a_key_pressed_reg <= '1';
                    --R4
                elsif Row = "1110" then
-                   decode_reg <= "1111"; --F
+                   decode_reg <= "1101"; --F
                    is_a_key_pressed_reg <= '1';
                else
                    decode_reg <= decode_reg;
@@ -90,7 +91,7 @@ begin
            elsif sclk = "01001001001111101000" then
                --R1
                if Row = "0111" then
-                   decode_reg <= "0011"; --3  
+                   decode_reg <= "0010"; --3  
                    is_a_key_pressed_reg <= '1';
                    --R2
                elsif Row = "1011" then
@@ -98,7 +99,7 @@ begin
                    is_a_key_pressed_reg <= '1';
                    --R3
                elsif Row = "1101" then
-                   decode_reg <= "1001"; --9
+                   decode_reg <= "1010"; --9
                    is_a_key_pressed_reg <= '1';
                    --R4
                elsif Row = "1110" then
@@ -119,19 +120,19 @@ begin
            elsif sclk = "01100001101010001000" then
                --R1
                if Row = "0111" then
-                   decode_reg <= "1010"; --A
+                   decode_reg <= "0011"; --A
                    is_a_key_pressed_reg <= '1';
                    --R2
                elsif Row = "1011" then
-                   decode_reg <= "1011"; --B
+                   decode_reg <= "0111"; --B
                    is_a_key_pressed_reg <= '1';
                    --R3
                elsif Row = "1101" then
-                   decode_reg <= "1100"; --C
+                   decode_reg <= "1011"; --C
                    is_a_key_pressed_reg <= '1';
                    --R4
                elsif Row = "1110" then
-                   decode_reg <= "1101"; --D
+                   decode_reg <= "1111"; --D
                    is_a_key_pressed_reg <= '1';
                else
                    decode_reg <= decode_reg;
